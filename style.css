@@ -1,0 +1,89 @@
+.pointer:hover{
+	cursor: pointer;
+}
+.default, .disabled{
+	cursor: default !important;
+}
+.no-select{
+	-webkit-user-select: none; /* Chrome/Safari */        
+	-moz-user-select: none; /* Firefox */
+	-ms-user-select: none; /* IE10+ */
+}
+
+.red{
+	color: red !important;
+}
+.bold{
+	font-weight:bold;
+	text-decoration: underline;
+}
+.green{
+	color: #00b200 !important;
+}
+
+.theader{
+	font-size:20px;
+}
+
+.achievementTD{
+	padding: 0px;
+	background-color: white !important;
+}
+
+/* Mobile optimization */
+@media (max-width: 992px) {
+	.container {
+		max-width: 100% !important;
+		width: auto !important;
+		padding: 0 8px !important;
+	}
+
+	#tabContent > .tab-pane {
+		float: none !important;
+		margin-left: 0 !important;
+		width: auto !important;
+	}
+
+	#tabContent, .tab-content {
+		width: 100% !important;
+	}
+
+	.table {
+		width: 100% !important;
+		word-break: break-word;
+	}
+
+	.nav-tabs > li {
+		float: none !important;
+		display: inline-block !important;
+	}
+
+	.nav-tabs > li > a {
+		padding: 8px 10px !important;
+		font-size: 14px !important;
+	}
+
+	.sideTab {
+		height: auto !important;
+	}
+
+	#resourceNavParent, #technologyNavParent, .table {
+		min-width: 0 !important;
+	}
+}
+
+@media (max-width: 640px) {
+	.navbar-brand, .navbar-nav > li > a {
+		font-size: 12px !important;
+	}
+
+	#tabList {
+		overflow-x: auto;
+		white-space: nowrap;
+	}
+
+	#tabList > li {
+		display: inline-block;
+		float: none !important;
+	}
+}
