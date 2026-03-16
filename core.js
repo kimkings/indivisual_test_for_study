@@ -29,6 +29,11 @@ function calculateEnergyOutput(delta) {
 		output += fusionReactor * fusionReactorOutput;
 	}
 
+	if (getResourceAfterTick(RESOURCE.Hydrogen, delta) >= singularityReactor * singularityReactorHydrogenInput * delta &&
+		getResourceAfterTick(RESOURCE.Helium, delta) >= singularityReactor * singularityReactorHeliumInput * delta) {
+		output += singularityReactor * singularityReactorOutput;
+	}
+
 	return output * multiplier;
 }
 
@@ -232,6 +237,8 @@ function refreshPerSec(delta){
         lavaps -= magmatic * magmaticLavaInput;
         hydrogenps -= fusionReactor * fusionReactorHydrogenInput;
         heliumps -= fusionReactor * fusionReactorHeliumInput;
+		hydrogenps -= singularityReactor * singularityReactorHydrogenInput;
+		heliumps -= singularityReactor * singularityReactorHeliumInput;
 	}
 
 	if (charcoalToggled) {
@@ -465,6 +472,9 @@ function checkRedCost() {
 	Game.settings.turnRed(getResource(RESOURCE.Lunarite), fusionReactorLunariteCost, "fusionReactorLunariteCost");
 	Game.settings.turnRed(getResource(RESOURCE.Titanium), fusionReactorTitaniumCost, "fusionReactorTitaniumCost");
 	Game.settings.turnRed(getResource(RESOURCE.Silicon), fusionReactorSiliconCost, "fusionReactorSiliconCost");
+	Game.settings.turnRed(getResource(RESOURCE.Lunarite), singularityReactorLunariteCost, "singularityReactorLunariteCost");
+	Game.settings.turnRed(getResource(RESOURCE.Titanium), singularityReactorTitaniumCost, "singularityReactorTitaniumCost");
+	Game.settings.turnRed(getResource(RESOURCE.Silicon), singularityReactorSiliconCost, "singularityReactorSiliconCost");
 	Game.settings.turnRed(getResource(RESOURCE.Metal), pumpMetalCost, "pumpMetalCost");
 	Game.settings.turnRed(getResource(RESOURCE.Gem), pumpGemCost, "pumpGemCost");
 
