@@ -78,12 +78,15 @@
 	}
 
 	#tabList {
-		overflow-x: auto;
-		white-space: nowrap;
+		overflow-x: visible !important;
+		white-space: normal !important;
+		display: flex !important;
+		flex-wrap: wrap !important;
+		align-items: flex-start;
 	}
 
 	#tabList > li {
-		display: inline-block;
+		display: inline-block !important;
 		float: none !important;
 	}
 }

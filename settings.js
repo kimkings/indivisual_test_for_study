@@ -131,6 +131,12 @@ Game.settings = (function(){
             }
         }
 
+        // localStorage override for immediate language persistence (even without explicit save)
+        var storedLanguage = localStorage.getItem('scLanguage');
+        if(storedLanguage && this.translations[storedLanguage]) {
+            this.entries.language = storedLanguage;
+        }
+
         console.log(this.entries.hideCompleted)
 
         $('#formatSelector').val(this.entries.formatter);
@@ -212,6 +218,7 @@ Game.settings = (function(){
         $('#languageSelector').change(function(){
             var newLang = $(this).val();
             Game.settings.set('language', newLang);
+            localStorage.setItem('scLanguage', newLang);
             Game.settings.applyLanguage();
         });
 
@@ -383,11 +390,46 @@ Game.settings = (function(){
         }
 
         this.entries.language = lang;
+        localStorage.setItem('scLanguage', lang);
+
+        // HTML lang attr for browser auto-translate hints
+        if(document.documentElement) {
+            document.documentElement.lang = lang;
+        }
 
         var t = this.translations[lang];
         var setText = function(id, value) {
             var el = document.getElementById(id);
-            if(el) { el.textContent = value; }
+            if(!el || value === undefined) { return; }
+
+            var labelText = el.querySelector && el.querySelector('.labelText');
+            if(labelText) {
+                labelText.textContent = value;
+                return;
+            }
+
+            if(el.tagName && el.tagName.toLowerCase() === 'input') {
+                if(el.placeholder !== undefined) {
+                    el.placeholder = value;
+                } else {
+                    el.value = value;
+                }
+                return;
+            }
+
+            // preserve checkbox/input inside label if no .labelText child
+            if(el.querySelector && el.querySelector('input[type="checkbox"]')) {
+                var span = el.querySelector('.labelText');
+                if(!span) {
+                    span = document.createElement('span');
+                    span.className = 'labelText';
+                    el.appendChild(span);
+                }
+                span.textContent = value;
+                return;
+            }
+
+            el.textContent = value;
         };
 
         setText('navResourcesText', t['nav.resources']);
@@ -410,6 +452,23 @@ Game.settings = (function(){
         setText('gainButtonsHiddenLabel', t['settings.gainButtonsHidden']);
         setText('redDestroyButtonsLabel', t['settings.redDestroyButtons']);
         setText('hideCompletedLabel', t['settings.hideCompleted']);
+
+        // Apply translation to all data-i18n nodes (extensible content translation)
+        document.querySelectorAll('[data-i18n]').forEach(function(el) {
+            var key = el.getAttribute('data-i18n');
+            if(!key || !t[key]) { return; }
+            if(el.tagName.toLowerCase() === 'input') {
+                if(el.placeholder !== undefined) {
+                    el.placeholder = t[key];
+                } else {
+                    el.value = t[key];
+                }
+            } else if(el.querySelector && el.querySelector('.labelText')) {
+                setText(el.id, t[key]);
+            } else {
+                el.textContent = t[key];
+            }
+        });
 
         var languageSelector = document.getElementById('languageSelector');
         if(languageSelector) { languageSelector.value = lang; }
