@@ -336,6 +336,10 @@ function updateCost(){
 	fusionReactorTitaniumCost = Math.floor(20000 * Math.pow(1.1,fusionReactor));
 	fusionReactorSiliconCost = Math.floor(15000 * Math.pow(1.1,fusionReactor));
 
+	singularityReactorLunariteCost = Math.floor(35000 * Math.pow(1.1,singularityReactor));
+	singularityReactorTitaniumCost = Math.floor(25000 * Math.pow(1.1,singularityReactor));
+	singularityReactorSiliconCost = Math.floor(20000 * Math.pow(1.1,singularityReactor));
+
 	grinderTitaniumCost = Math.floor(2000 * Math.pow(1.1,grinder) * T1Price);
 	grinderLunariteCost = Math.floor(4000 * Math.pow(1.1,grinder) * T1Price);
 	grinderGoldCost = Math.floor(2000 * Math.pow(1.1,grinder) * T1Price);
@@ -832,6 +836,16 @@ function getFusionReactor(){
 	}
 }
 
+function getSingularityReactor(){
+	if(getResource(RESOURCE.Lunarite) >= singularityReactorLunariteCost && getResource(RESOURCE.Titanium) >= singularityReactorTitaniumCost && getResource(RESOURCE.Silicon) >= singularityReactorSiliconCost){
+		Game.resources.takeResource(RESOURCE.Lunarite, singularityReactorLunariteCost);
+		Game.resources.takeResource(RESOURCE.Titanium, singularityReactorTitaniumCost);
+		Game.resources.takeResource(RESOURCE.Silicon, singularityReactorSiliconCost);
+		singularityReactor += 1;
+		updateCost();
+		Game.statistics.add('tierOwned6');
+	}
+}
 function getGrinder(){
 	if(getResource(RESOURCE.Titanium) >= grinderTitaniumCost * T1Price && getResource(RESOURCE.Lunarite) >= grinderLunariteCost * T1Price && getResource(RESOURCE.Gold) >= grinderGoldCost * T1Price){
 		Game.resources.takeResource(RESOURCE.Titanium, grinderTitaniumCost * T1Price);

@@ -96,6 +96,13 @@ function registerLegacyBindings() {
     Game.ui.bindElement('fusionReactorLunariteCost', function(){ return Game.settings.format(fusionReactorLunariteCost); });
     Game.ui.bindElement('fusionReactorTitaniumCost', function(){ return Game.settings.format(fusionReactorTitaniumCost); });
     Game.ui.bindElement('fusionReactorSiliconCost', function(){ return Game.settings.format(fusionReactorSiliconCost); });
+    Game.ui.bindElement('singularityReactor', function(){ return Game.settings.format(singularityReactor); });
+    Game.ui.bindElement('singularityReactorLunariteCost', function(){ return Game.settings.format(singularityReactorLunariteCost); });
+    Game.ui.bindElement('singularityReactorTitaniumCost', function(){ return Game.settings.format(singularityReactorTitaniumCost); });
+    Game.ui.bindElement('singularityReactorSiliconCost', function(){ return Game.settings.format(singularityReactorSiliconCost); });
+    Game.ui.bindElement('singularityReactorOutput', function(){ return Game.settings.format(singularityReactorOutput); });
+    Game.ui.bindElement('singularityReactorHydrogenInput', function(){ return Game.settings.format(singularityReactorHydrogenInput); });
+    Game.ui.bindElement('singularityReactorHeliumInput', function(){ return Game.settings.format(singularityReactorHeliumInput); });
     Game.ui.bindElement('pump', function(){ return Game.settings.format(pump); });
     Game.ui.bindElement('pumpMetalCost', function(){ return Game.settings.format(pumpMetalCost); });
     Game.ui.bindElement('pumpGemCost', function(){ return Game.settings.format(pumpGemCost); });

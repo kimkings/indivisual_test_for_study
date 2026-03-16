@@ -152,6 +152,43 @@ Game.prestigeData = (function(){
 		category: "intro",
 	};
 
+
+	instance.rebirthBooster1 = {
+		name: "Rebirth Jumpstart",
+		desc: "Start each rebirth with 250,000 Metal, 250,000 Gem, and 50,000 Science.",
+		cost: 18,
+		category: "darkMatter",
+		rebirthStart: {metal:250000, gem:250000, science:50000},
+		onApply: function(){
+			metal += 250000;
+			gem += 250000;
+			science += 50000;
+		},
+		remove: function(){
+			metal -= 250000;
+			gem -= 250000;
+			science -= 50000;
+		},
+		achieved: false,
+	};
+
+	instance.rebirthBooster2 = {
+		name: "Rebirth Logistics",
+		desc: "Start each rebirth with 12 Chemical Plants and 10 Explorers.",
+		cost: 22,
+		category: "darkMatter",
+		rebirthStart: {chemicalPlant:12, explorer:10},
+		onApply: function(){
+			chemicalPlant += 12;
+			explorer += 10;
+		},
+		remove: function(){
+			chemicalPlant -= 12;
+			explorer -= 10;
+		},
+		achieved: false,
+	};
+
 	instance.increaseProd1 = {
 		name: "Dark Matter Boost",
 		desc: "This adds a 1% boost to all resources (including science) for each Dark Matter you have not spent.",
@@ -535,6 +572,21 @@ Game.prestigeData = (function(){
 	/*************
 	** Overlord **
 	*************/
+
+	instance.T7Machines = {
+		name: "Tier 7 Machines",
+		desc: "Through Overlord relations, unlock Tier 7 Singularity Reactor technology.",
+		cost: 44,
+		category: "overlord",
+		opinion: 32,
+		onApply: function(){
+			unlockTier7();
+		},
+		remove: function(){
+			removeTier7();
+		},
+		achieved: false
+	};
 
 	return instance;
 

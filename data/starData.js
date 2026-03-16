@@ -1187,8 +1187,52 @@ Game.starData = (function(){
 		},
 	};
 
+	instance._244201 = {
+		name: "Kepler Frontier",
+		distance: 22.15,
+		planets: 3,
+		factionId: "hyacinite",
+		faction: "Hyacinite Congregation",
+		resource1: "Hydrogen",
+		resource2: "Ice",
+		stats: {
+			"power": 1910,
+			"defense": 704,
+			"speed": 13,
+		},
+	};
+
+	instance._198401 = {
+		name: "Pulsar Bastion",
+		distance: 22.84,
+		planets: 1,
+		factionId: "moviton",
+		faction: "Moviton Syndicate",
+		resource1: "Uranium",
+		resource2: "Meteorite",
+		stats: {
+			"power": 2055,
+			"defense": 790,
+			"speed": 16,
+		},
+	};
+
+	instance._266101 = {
+		name: "Galactic Core Relay",
+		distance: 23.6,
+		planets: 2,
+		factionId: "overlord",
+		faction: "Overlord Cult",
+		resource1: "Plasma",
+		resource2: "Meteorite",
+		stats: {
+			"power": 2340,
+			"defense": 980,
+			"speed": 12,
+		},
+	};
+
 	return instance;
 
 }());
-
 

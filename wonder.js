@@ -232,6 +232,16 @@ function unlockTier5(){
 	document.getElementById("iceTier5").className = "";
 }
 
+function unlockTier7(){
+	document.getElementById("fusionTier7").className = "";
+}
+
+function removeTier7(){
+	document.getElementById("fusionTier7").className = "hidden";
+	singularityReactor = 0;
+	updateCost();
+}
+
 function removeTier5(){
 	document.getElementById("uraniumTier5").className = "hidden";
 	document.getElementById("lavaTier5").className = "hidden";
