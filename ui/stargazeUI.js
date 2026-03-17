@@ -20,6 +20,8 @@ Game.stargazeUI = (function(){
     instance.tab = null;
 
     instance.categoryNames = {};
+    instance.missionTemplate = null;
+    instance.rewardTemplate = null;
 
     instance.initialise = function() {
 
@@ -50,12 +52,16 @@ Game.stargazeUI = (function(){
                 '<h2 class="default btn-link">{{name}}</h2>',
                 '<span>{{desc}}</span>',
                 '<br><br>',
+                '<h4><b>Void Cores: <span id="voidCoreCount">0</span></b></h4>',
+                '<span>Current generation: <span id="voidCoreRate">0</span> / second</span>',
+                '<br><br>',
                 '</td></tr>'].join('\n'));
 
         instance.titleTemplate = Handlebars.compile(
             ['<tr><td style="border:none;">',
                 '<h2 class="default btn-link">{{name}}</h2>',
                 '<h4><b>Relationship: <span id="{{htmlId}}_pageOpinion">{{opinion}}</span></b></h4>',
+                '<h4><b>Standing: <span id="{{htmlId}}_rank">Unknown</span></b></h4>',
                 '<span>{{{desc}}}</span>',
                 '<br><br>',
                 '</td></tr>'].join('\n'));
@@ -116,6 +122,25 @@ Game.stargazeUI = (function(){
                 '<br><br>',
                 '</td></tr>'].join('\n'));
 
+        instance.missionTemplate = Handlebars.compile(
+            ['<tr id="{{htmlId}}"><td>',
+                '<h3 class="default btn-link">{{name}}: <span id="{{htmlId}}_status">Pending</span></h3>',
+                '<span>',
+                    '<p>{{desc}}</p>',
+                    '<p id="{{htmlId}}_requirements">{{requirementsText}}</p>',
+                    '<p>Reward: +{{reward}} Relationship</p>',
+                '</span>',
+                '<div id="{{htmlId}}_buy" onclick="Game.stargaze.completeDiplomacyMission(\'{{factionId}}\', \'{{id}}\')" class="btn btn-default disabled">Awaiting Requirements</div>',
+                '<br><br>',
+                '</td></tr>'].join('\n'));
+
+        instance.rewardTemplate = Handlebars.compile(
+            ['<tr id="{{htmlId}}"><td>',
+                '<h4 class="default btn-link">{{threshold}} Reputation: <span id="{{htmlId}}_status">Locked</span></h4>',
+                '<span>{{desc}}</span>',
+                '<br><br>',
+                '</td></tr>'].join('\n'));
+
         for(var id in Game.stargazeCategoryData){
             Game.stargaze.categoryEntries[id] = Game.stargazeCategoryData[id];
         }
@@ -143,6 +168,7 @@ Game.stargazeUI = (function(){
                 if(data.category == "faction"){
                     $('#stargazeNav' + id + '_opinion').text(data.opinion);
                     $('#stargazeNav' + id + '_pageOpinion').text(data.opinion);
+                    $('#' + data.htmlId + '_rank').text(Game.stargaze.getFactionRankName(id));
                     $('#intnav_' + id + '_opinion').text(data.opinion);
                     if(data.unlocked == true){
                         document.getElementById('stargazeTab_' + id + '_ne').className = "collapse_stargazeTab_faction";
@@ -151,6 +177,32 @@ Game.stargazeUI = (function(){
                     }
                 }
                 data.displayNeedsUpdate = false;
+            }
+            if(data.category == "faction" && data.diplomacy){
+                for(var i = 0; i < data.diplomacy.length; i++){
+                    var mission = data.diplomacy[i];
+                    var missionHtmlId = data.htmlId + '_' + mission.id;
+                    if(mission.completed === true){
+                        $('#' + missionHtmlId + '_status').text('Completed');
+                        $('#' + missionHtmlId + '_buy').text('Completed');
+                        document.getElementById(missionHtmlId + '_buy').className = 'btn btn-default disabled';
+                    } else if(Game.stargaze.requirementMet(mission.requirements) === true){
+                        $('#' + missionHtmlId + '_status').text('Ready');
+                        $('#' + missionHtmlId + '_buy').text('Send Envoys');
+                        document.getElementById(missionHtmlId + '_buy').className = 'btn btn-default';
+                    } else {
+                        $('#' + missionHtmlId + '_status').text('Pending');
+                        $('#' + missionHtmlId + '_buy').text('Awaiting Requirements');
+                        document.getElementById(missionHtmlId + '_buy').className = 'btn btn-default disabled';
+                    }
+                }
+                var rewards = Game.stargaze.getFactionRewardInfo(id);
+                for(var rewardIndex = 0; rewardIndex < rewards.length; rewardIndex++){
+                    var reward = rewards[rewardIndex];
+                    var rewardHtmlId = data.htmlId + '_reward_' + reward.threshold;
+                    var unlocked = data.opinion >= reward.threshold;
+                    $('#' + rewardHtmlId + '_status').text(unlocked ? 'Unlocked' : 'Locked');
+                }
             }
         }
 
@@ -215,6 +267,46 @@ Game.stargazeUI = (function(){
         //this.upgradeObservers[upgradeData.id] = [];
     };
 
+    instance.requirementLabel = function(requirements){
+        var parts = [];
+        if(requirements && requirements.donation){
+            for(var resource in requirements.donation){
+                var resourceData = Game.resources.getResourceData(resource);
+                var name = resourceData ? resourceData.name : resource;
+                parts.push('Donate ' + Game.settings.format(requirements.donation[resource]) + ' ' + name);
+            }
+        }
+        if(requirements && requirements.machines){
+            for(var machine in requirements.machines){
+                parts.push('Build ' + Game.settings.format(requirements.machines[machine]) + ' ' + Game.utils.capitaliseFirst(machine));
+            }
+        }
+        if(requirements && requirements.variables){
+            for(var variable in requirements.variables){
+                parts.push(Game.settings.format(requirements.variables[variable]) + ' ' + Game.utils.capitaliseFirst(variable));
+            }
+        }
+        return parts.join(', ');
+    };
+
+    instance.createDiplomacyMission = function(data, missionData) {
+        var tabContentRoot = $('#' + this.tab.getContentElementId(data.id));
+        var mission = this.missionTemplate($.extend({}, missionData, {
+            factionId: data.id,
+            htmlId: data.htmlId + '_' + missionData.id,
+            requirementsText: 'Requires: ' + this.requirementLabel(missionData.requirements)
+        }));
+        tabContentRoot.append($(mission));
+    };
+
+    instance.createFactionReward = function(data, rewardData) {
+        var tabContentRoot = $('#' + this.tab.getContentElementId(data.id));
+        var reward = this.rewardTemplate($.extend({}, rewardData, {
+            htmlId: data.htmlId + '_reward_' + rewardData.threshold
+        }));
+        tabContentRoot.append($(reward));
+    };
+
     instance.createContent = function(data) {
         var target = $('#' + this.tab.getContentElementId(data.id));
         if(data.id == "intro"){
@@ -236,6 +328,17 @@ Game.stargazeUI = (function(){
             var upgradeData = Game.stargaze.upgradeEntries[id];
             if(data.id == upgradeData.category){
                 this.createUpgrade(data, upgradeData);
+            }
+        }
+        if(data.category == "faction" && data.diplomacy && data.diplomacy.length > 0){
+            target.append($('<tr><td><h3 class="default btn-link">Standing Rewards</h3><span>Higher relationships unlock passive faction perks across the whole game.</span><br><br></td></tr>'));
+            var rewards = Game.stargaze.getFactionRewardInfo(data.id);
+            for(var rewardIndex = 0; rewardIndex < rewards.length; rewardIndex++){
+                this.createFactionReward(data, rewards[rewardIndex]);
+            }
+            target.append($('<tr><td><h3 class="default btn-link">Diplomatic Overtures</h3><span>Reach the listed industrial milestones to impress this faction and bank a one-time relationship boost.</span><br><br></td></tr>'));
+            for(var i = 0; i < data.diplomacy.length; i++){
+                this.createDiplomacyMission(data, data.diplomacy[i]);
             }
         }
     };
@@ -296,8 +399,16 @@ Game.stargazeUI = (function(){
         $('#research_dmGain').text(researchDM);
         $('#rank_dmGain').text(rankDM);
         $('#swarm_dmGain').text(swarmDM);
+        var factionRankDM = Game.stargaze.getFactionDarkMatter();
+        var conquestDM = Game.stargaze.getConquestDarkMatter();
+        var voidCoreDM = Game.stargaze.getVoidCoreDarkMatter();
+        $('#factionRanks_dmGain').text(factionRankDM);
+        $('#conquest_dmGain').text(conquestDM);
+        $('#voidCore_dmGain').text(voidCoreDM);
+        $('#voidCoreCount').text(Game.settings.format(voidCore));
+        $('#voidCoreRate').text(voidCoreRate.toFixed(3));
 
-        DM += wonderDM + sphereDM + researchDM + rankDM + swarmDM;
+        DM += wonderDM + sphereDM + researchDM + rankDM + swarmDM + factionRankDM + conquestDM + voidCoreDM;
         if(Game.stargaze.entries.darkMatter){
             Game.stargaze.entries.darkMatter.current = DM;
             $('#stargazeNavdarkMatter_current').text(DM);

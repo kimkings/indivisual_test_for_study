@@ -18,7 +18,7 @@ Game.achievementsCategoryData = (function () {
 		brackets: [5, 25, 75, 150, 250],
 		entries: [
 			'prodPlasma1', 'prodPlasma2',
-			'prodEnergy1', 'prodEnergy2', 'prodEnergy3', 'prodEnergy4', 'prodEnergy5', 'prodEnergy6',
+			'prodEnergy1', 'prodEnergy2', 'prodEnergy3', 'prodEnergy4', 'prodEnergy5', 'prodEnergy6', 'prodEnergy7',
 			'prodUranium1', 'prodUranium2', 'prodUranium3', 'prodUranium4', 'prodUranium5',
 			'prodLava1', 'prodLava2', 'prodLava3', 'prodLava4', 'prodLava5',
 			
@@ -294,6 +294,15 @@ Game.achievementsData = (function(){
 		title: 'Build %s Fusion Reactors',
 		evaluator: function(x) { return fusionReactor >= x },
 		progressEvaluator: function(x) { return fusionReactor/x }
+	};
+
+	instance.prodEnergy7 = {
+		id_v4: 'ach_122',
+		categoryInstance: Game.achievementsCategoryData.producers,
+		iconName: 'EnergyIcon',
+		title: 'Build %s Singularity Reactors',
+		evaluator: function(x) { return singularityReactor >= x },
+		progressEvaluator: function(x) { return singularityReactor/x }
 	};
 
 	instance.prodPlasma1 = {
@@ -1172,4 +1181,3 @@ Game.achievementsData = (function(){
 	return instance;
 
 }());
-

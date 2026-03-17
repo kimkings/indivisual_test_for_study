@@ -45,6 +45,28 @@ Game.stargazeData = (function(){
 		desc: "A ruthless faction with a fierce anger towards the ones in power, most notable, the Prasnian Empire. They are incessant in their opposition and focus their whole force towards attacking their enemies. Because of this, what they offer comprises mostly of upgrades tending towards a more active gameplay.",
 		category: "faction",
 		opinion: 0,
+		diplomacy: [
+			{
+				id: "carnelianSupplyDrop",
+				name: "Frontier Supply Drop",
+				desc: "Ship a cache of battlefield supplies to Carnelian raiders operating near the frontier.",
+				requirements: {
+					donation: {metal: 150000, uranium: 1200},
+					machines: {planetNuke: 8}
+				},
+				reward: 4
+			},
+			{
+				id: "carnelianWarForge",
+				name: "War Forge Contract",
+				desc: "Demonstrate heavy industrial backing by stockpiling strategic minerals for their hidden war foundries.",
+				requirements: {
+					donation: {meteorite: 2200, titanium: 125000},
+					machines: {werewolf: 12}
+				},
+				reward: 6
+			}
+		],
 		unlocked: true
 	};
 
@@ -53,6 +75,29 @@ Game.stargazeData = (function(){
 		desc: "The current leader in the galaxy and the faction most focused on keeping things as they are. Opposed to change, they have an authoritarian regime and offer mainly upgrades concerning structures such as the Dysons or Wonders",
 		category: "faction",
 		opinion: 0,
+		diplomacy: [
+			{
+				id: "prasnianTribute",
+				name: "Imperial Tribute",
+				desc: "Present refined luxury materials to the Prasnian court to prove your empire understands ceremony.",
+				requirements: {
+					donation: {gold: 180000, silver: 260000},
+					machines: {ring: 12}
+				},
+				reward: 4
+			},
+			{
+				id: "prasnianMonument",
+				name: "Monument Audit",
+				desc: "The Empire only respects stable rulers. Maintain a Dyson sphere and a generous reserve of Lunarite.",
+				requirements: {
+					donation: {lunarite: 220000},
+					machines: {swarm: 6},
+					variables: {sphere: 1}
+				},
+				reward: 7
+			}
+		],
 		unlocked: true
 	};
 
@@ -61,6 +106,29 @@ Game.stargazeData = (function(){
 		desc: "The Hyacinite Congregationg is a science loving society, proud of all advances in technology and always looking to the future. They fight for the truth and are welcoming to anyone who shares their beliefs.",
 		category: "faction",
 		opinion: 0,
+		diplomacy: [
+			{
+				id: "hyaciniteResearchGrant",
+				name: "Open Research Grant",
+				desc: "Fund shared laboratories and publish a large scientific reserve to Hyacinite observers.",
+				requirements: {
+					donation: {science: 260000, silicon: 180000},
+					machines: {labT4: 25}
+				},
+				reward: 5
+			},
+			{
+				id: "hyaciniteFieldLab",
+				name: "Field Lab Demonstration",
+				desc: "Show that your scientific culture is mature by operating advanced labs and antimatter studies at scale.",
+				requirements: {
+					donation: {helium: 90000, hydrogen: 90000},
+					machines: {labT5: 10},
+					variables: {sphere: 1}
+				},
+				reward: 7
+			}
+		],
 		unlocked: true
 	};
 
@@ -69,6 +137,28 @@ Game.stargazeData = (function(){
 		desc: "This private company has grown powerful over the galaxy and is inspired by profits, with allies to those who can support their aims. Upgrades offered focus on passive gains, with a large amount of automation.",
 		category: "faction",
 		opinion: 0,
+		diplomacy: [
+			{
+				id: "kitrinosLiquidity",
+				name: "Liquidity Assurance",
+				desc: "Flash enough liquid capital and energy reserves to convince Kitrinos you are worth automating around.",
+				requirements: {
+					donation: {gem: 240000, oil: 180000},
+					machines: {forest: 15}
+				},
+				reward: 5
+			},
+			{
+				id: "kitrinosPassiveGrid",
+				name: "Passive Grid Franchise",
+				desc: "Maintain a sprawling passive extraction network that can be franchised across Kitrinos trade routes.",
+				requirements: {
+					donation: {silver: 210000, energy: 500000},
+					machines: {overexchange: 10}
+				},
+				reward: 6
+			}
+		],
 		unlocked: true
 	};
 
@@ -77,6 +167,29 @@ Game.stargazeData = (function(){
 		desc: "The Moviton Syndicate is an expansionist centred faction, with a goal of conquest over the galaxy. They often play both sides of a conflict, hoping to gain from the chaos. They offer improvements in your travel, including rocket building and interstellar travel.",
 		category: "faction",
 		opinion: 0,
+		diplomacy: [
+			{
+				id: "movitonFuelCorridor",
+				name: "Fuel Corridor",
+				desc: "Establish a dependable corridor of fuel and scouts for Moviton pilots crossing dangerous systems.",
+				requirements: {
+					donation: {rocketFuel: 24000, hydrogen: 140000},
+					machines: {hydrazine: 12}
+				},
+				reward: 5
+			},
+			{
+				id: "movitonStrikeEscort",
+				name: "Strike Escort Pact",
+				desc: "Show that you can project force quickly enough to escort a Syndicate convoy through a hostile region.",
+				requirements: {
+					donation: {titanium: 150000, methane: 120000},
+					machines: {titanDrill: 25},
+					variables: {rocket: 1}
+				},
+				reward: 6
+			}
+		],
 		unlocked: true
 	};
 
@@ -85,6 +198,29 @@ Game.stargazeData = (function(){
 		desc: "This faction is shrowded in mystery. While not much is known, a great sense of power overlooks the whole galaxy, seemingly above the other 5 factions and their 'petty' squables. The upgrades from your loyalty to the Overlord are not constrained to a type and vary greatly.",
 		category: "faction",
 		opinion: 0,
+		diplomacy: [
+			{
+				id: "overlordResonance",
+				name: "Resonance Offering",
+				desc: "Feed the Cult a rare mix of antimatter, plasma, and meteorite to prove you can handle forbidden power.",
+				requirements: {
+					donation: {antimatter: 18000, plasma: 9000, meteorite: 3000},
+					machines: {printer: 20}
+				},
+				reward: 6
+			},
+			{
+				id: "overlordDominion",
+				name: "Dominion Oath",
+				desc: "The Overlord only values leaders with cosmic reach. Build a sphere and stand ready with singularity reactors.",
+				requirements: {
+					donation: {helium: 140000, hydrogen: 140000},
+					machines: {singularityReactor: 5},
+					variables: {sphere: 1}
+				},
+				reward: 8
+			}
+		],
 		unlocked: true
 	};
 
@@ -124,6 +260,21 @@ Game.darkMatter = (function(){
 	instance.swarm = {
 		name: "Swarms",
 		desc: "One of the more complex systems, your Dark Matter gained from swarms is judged on an old mathematical sequence: Pascal's Triangle. You will get 1 dark matter for passing each triangular number of swarms necessary. For example: 1,3,6,10,15,21...",
+	};
+
+	instance.factionRanks = {
+		name: "Faction Standing",
+		desc: "Every faction tier you achieve contributes bonus Dark Matter. Each standing threshold hit across the six factions grants 2 Dark Matter on rebirth.",
+	};
+
+	instance.conquest = {
+		name: "Conquered Systems",
+		desc: "For every 2 interstellar systems you conquer, you gain 1 Dark Matter on rebirth.",
+	};
+
+	instance.voidCore = {
+		name: "Void Cores",
+		desc: "Singularity Reactors and late-game expedition events create unstable Void Cores. Every 10 Void Cores are worth 1 Dark Matter on rebirth.",
 	};
 
 	return instance;
@@ -200,6 +351,65 @@ Game.prestigeData = (function(){
 	    remove: function(){
 	    	dmBoost -= 0.01;
 	    },
+		achieved: false,
+	};
+
+	instance.diplomaticCache = {
+		name: "Diplomatic Cache",
+		desc: "Start each life with established embassy channels, granting +10 relationship with every faction.",
+		cost: 20,
+		category: "darkMatter",
+		onApply: function(){
+			for(var id in Game.stargaze.entries){
+				if(Game.stargaze.entries[id].category == "faction"){
+					Game.stargaze.entries[id].opinion += 10;
+					Game.stargaze.entries[id].displayNeedsUpdate = true;
+				}
+			}
+		},
+		remove: function(){
+			for(var id in Game.stargaze.entries){
+				if(Game.stargaze.entries[id].category == "faction"){
+					Game.stargaze.entries[id].opinion -= 10;
+					Game.stargaze.entries[id].displayNeedsUpdate = true;
+				}
+			}
+		},
+		achieved: false,
+	};
+
+	instance.starlaneCartography = {
+		name: "Starlane Cartography",
+		desc: "Reduce interstellar exploration costs by an additional 15% and improve all espionage chances by 25%.",
+		cost: 24,
+		category: "darkMatter",
+		onApply: function(){},
+		remove: function(){},
+		achieved: false,
+	};
+
+	instance.expeditionLedger = {
+		name: "Expedition Ledger",
+		desc: "Expedition events pay out 50% more resources, Antimatter, and Void Cores.",
+		cost: 28,
+		category: "darkMatter",
+		onApply: function(){},
+		remove: function(){},
+		achieved: false,
+	};
+
+	instance.voidContainment = {
+		name: "Void Containment",
+		desc: "Double Void Core generation and start each rebirth with 25 Void Cores already stabilized.",
+		cost: 36,
+		category: "darkMatter",
+		rebirthStart: {voidCore:25},
+		onApply: function(){
+			voidCore += 25;
+		},
+		remove: function(){
+			voidCore = Math.max(0, voidCore - 25);
+		},
 		achieved: false,
 	};
 

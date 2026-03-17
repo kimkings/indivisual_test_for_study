@@ -17,17 +17,198 @@ Game.stargaze = (function(){
 	instance.rebirthNeedsUpdate = true;
 
 	instance.unlocked = false;
+	instance.factionThresholds = [25, 50, 80];
+	instance.factionRankNames = ["Unknown", "Trusted", "Favored", "Ascendant"];
+	instance.factionRewardData = {
+		carnelian: [
+			{threshold: 25, desc: "Manual gain x1.25"},
+			{threshold: 50, desc: "Manual gain x1.50"},
+			{threshold: 80, desc: "Manual gain x1.75"}
+		],
+		prasnian: [
+			{threshold: 25, desc: "Dyson output x1.12"},
+			{threshold: 50, desc: "Dyson output x1.24"},
+			{threshold: 80, desc: "Dyson output x1.36"}
+		],
+		hyacinite: [
+			{threshold: 25, desc: "Science output x1.10"},
+			{threshold: 50, desc: "Science output x1.20"},
+			{threshold: 80, desc: "Science output x1.30"}
+		],
+		kitrinos: [
+			{threshold: 25, desc: "Passive production x1.08"},
+			{threshold: 50, desc: "Passive production x1.16"},
+			{threshold: 80, desc: "Passive production x1.24"}
+		],
+		moviton: [
+			{threshold: 25, desc: "Travel cost -10%, spy chance +20%"},
+			{threshold: 50, desc: "Travel cost -20%, spy chance +40%"},
+			{threshold: 80, desc: "Travel cost -30%, spy chance +60%"}
+		],
+		overlord: [
+			{threshold: 25, desc: "Singularity output x1.15, Void Core gain x1.25"},
+			{threshold: 50, desc: "Singularity output x1.30, Void Core gain x1.50"},
+			{threshold: 80, desc: "Singularity output x1.45, Void Core gain x1.75"}
+		]
+	};
+
+	instance.buildEntry = function(id, data){
+		return $.extend(true, {}, data, {
+			id: id,
+			htmlId: 'stargazeNav' + id,
+			displayNeedsUpdate: true
+		});
+	};
+
+	instance.buildUpgradeEntry = function(id, data){
+		return $.extend(true, {}, {
+			id: id,
+			htmlId: 'stargazeUpg' + id,
+			unlocked: true,
+			displayNeedsUpdate: true,
+			onApply: null,
+			rebirthUnlocked: [],
+			rebirthChildUnlocked: [],
+			rebirthStart: {}
+		}, data);
+	};
+
+	instance.normaliseEntry = function(id){
+		var source = Game.stargazeData[id];
+		if(!source || !this.entries[id]){
+			return;
+		}
+		var current = this.entries[id];
+		this.entries[id] = $.extend(true, {}, source, current, {
+			id: id,
+			htmlId: 'stargazeNav' + id,
+			displayNeedsUpdate: true
+		});
+	};
+
+	instance.getFactionTier = function(id){
+		var data = this.entries[id];
+		if(!data || typeof data.opinion === "undefined"){
+			return 0;
+		}
+		var tier = 0;
+		for(var i = 0; i < this.factionThresholds.length; i++){
+			if(data.opinion >= this.factionThresholds[i]){
+				tier += 1;
+			}
+		}
+		return tier;
+	};
+
+	instance.hasUpgrade = function(id){
+		return this.upgradeEntries[id] && this.upgradeEntries[id].achieved === true;
+	};
+
+	instance.getFactionRankName = function(id){
+		return this.factionRankNames[this.getFactionTier(id)];
+	};
+
+	instance.getFactionRewardInfo = function(id){
+		return this.factionRewardData[id] || [];
+	};
+
+	instance.getManualGainMultiplier = function(){
+		return 1 + (this.getFactionTier('carnelian') * 0.25);
+	};
+
+	instance.getDysonMultiplier = function(){
+		return 1 + (this.getFactionTier('prasnian') * 0.12);
+	};
+
+	instance.getScienceMultiplier = function(){
+		return 1 + (this.getFactionTier('hyacinite') * 0.10);
+	};
+
+	instance.getPassiveProductionMultiplier = function(){
+		return 1 + (this.getFactionTier('kitrinos') * 0.08);
+	};
+
+	instance.getTravelCostMultiplier = function(){
+		var value = Math.max(0.7, 1 - (this.getFactionTier('moviton') * 0.1));
+		if(this.hasUpgrade('starlaneCartography')){
+			value *= 0.85;
+		}
+		return value;
+	};
+
+	instance.getSpyChanceMultiplier = function(){
+		var value = 1 + (this.getFactionTier('moviton') * 0.2);
+		if(this.hasUpgrade('starlaneCartography')){
+			value *= 1.25;
+		}
+		return value;
+	};
+
+	instance.getSingularityMultiplier = function(){
+		return 1 + (this.getFactionTier('overlord') * 0.15);
+	};
+
+	instance.getVoidCoreMultiplier = function(){
+		var value = 1 + (this.getFactionTier('overlord') * 0.25);
+		if(this.hasUpgrade('voidContainment')){
+			value *= 2;
+		}
+		return value;
+	};
+
+	instance.getExpeditionRewardMultiplier = function(){
+		return this.hasUpgrade('expeditionLedger') ? 1.5 : 1;
+	};
+
+	instance.getFactionDarkMatter = function(){
+		var total = 0;
+		for(var id in this.entries){
+			if(this.entries[id].category == "faction"){
+				total += this.getFactionTier(id) * 2;
+			}
+		}
+		return total;
+	};
+
+	instance.getConquestDarkMatter = function(){
+		if(!Game.interstellar || !Game.interstellar.stars){
+			return 0;
+		}
+		var conquered = 0;
+		for(var id in Game.interstellar.stars.entries){
+			if(Game.interstellar.stars.entries[id].owned === true){
+				conquered += 1;
+			}
+		}
+		return Math.floor(conquered / 2);
+	};
+
+	instance.getVoidCoreDarkMatter = function(){
+		return Math.floor(voidCore / 10);
+	};
+
+	instance.updateVoidCores = function(delta){
+		var canRun = singularityReactor > 0 &&
+			getResourceAfterTick(RESOURCE.Hydrogen, delta) >= singularityReactor * singularityReactorHydrogenInput * delta &&
+			getResourceAfterTick(RESOURCE.Helium, delta) >= singularityReactor * singularityReactorHeliumInput * delta;
+		if(!canRun){
+			voidCoreRate = 0;
+			return;
+		}
+		var baseRate = singularityReactor * 0.0025;
+		if(sphere > 0){
+			baseRate *= 1.5;
+		}
+		voidCoreRate = baseRate * this.getVoidCoreMultiplier();
+		voidCore += voidCoreRate * delta;
+	};
 
 	instance.initialise = function(){
 		for (var id in Game.stargazeData) {
 			var data = Game.stargazeData[id];
 			
 			this.navCount++;
-			this.entries[id] = $.extend({}, data, {
-				id: id,
-				htmlId: 'stargazeNav' + id,
-				displayNeedsUpdate: true
-			});
+			this.entries[id] = this.buildEntry(id, data);
 		}
 		console.debug("Loaded " + this.navCount + " Stargaze Navs");
 
@@ -35,17 +216,75 @@ Game.stargaze = (function(){
 			var data = Game.prestigeData[id];
 			
 			this.navCount++;
-			this.upgradeEntries[id] = $.extend({}, {
-				id: id,
-				htmlId: 'stargazeUpg' + id,
-				unlocked: true,
-				displayNeedsUpdate: true,
-				onApply: null,
-				rebirthUnlocked: [],
-				rebirthChildUnlocked: [],
-				rebirthStart: {}
-			}, data);
+			this.upgradeEntries[id] = this.buildUpgradeEntry(id, data);
 		}
+	};
+
+	instance.requirementMet = function(requirements){
+		if(!requirements){
+			return true;
+		}
+		if(requirements.donation){
+			for(var resource in requirements.donation){
+				if(Game.resources.getResource(resource) < requirements.donation[resource]){
+					return false;
+				}
+			}
+		}
+		if(requirements.machines){
+			for(var machine in requirements.machines){
+				if(typeof window[machine] === "undefined" || window[machine] < requirements.machines[machine]){
+					return false;
+				}
+			}
+		}
+		if(requirements.variables){
+			for(var variable in requirements.variables){
+				if(typeof window[variable] === "undefined" || window[variable] < requirements.variables[variable]){
+					return false;
+				}
+			}
+		}
+		return true;
+	};
+
+	instance.getDiplomacyMission = function(factionId, missionId){
+		var entry = this.entries[factionId];
+		if(!entry || !entry.diplomacy){
+			return null;
+		}
+		for(var i = 0; i < entry.diplomacy.length; i++){
+			if(entry.diplomacy[i].id == missionId){
+				return entry.diplomacy[i];
+			}
+		}
+		return null;
+	};
+
+	instance.completeDiplomacyMission = function(factionId, missionId){
+		var faction = this.entries[factionId];
+		var mission = this.getDiplomacyMission(factionId, missionId);
+		if(!faction || !mission){
+			return;
+		}
+		if(mission.completed === true){
+			Game.notifyInfo("Diplomacy", "That diplomatic offer has already been completed.");
+			return;
+		}
+		if(this.requirementMet(mission.requirements) === false){
+			Game.notifyInfo("Diplomacy", "You have not met the requirements for that diplomatic offer yet.");
+			return;
+		}
+		if(mission.requirements && mission.requirements.donation){
+			for(var resource in mission.requirements.donation){
+				Game.resources.takeResource(resource, mission.requirements.donation[resource]);
+			}
+		}
+		mission.completed = true;
+		faction.opinion += mission.reward;
+		faction.displayNeedsUpdate = true;
+		this.rebirthNeedsUpdate = true;
+		Game.notifySuccess(faction.name, "Relationship improved by " + mission.reward + " through " + mission.name + ".");
 	};
 
 	instance.resetVars = function(){
@@ -138,7 +377,14 @@ Game.stargaze = (function(){
 					this.entries[nav].opinion = 0;
 					this.entries[nav].displayNeedsUpdate = true;
 				}
+				if(this.entries[nav].diplomacy){
+					for(var missionIndex = 0; missionIndex < this.entries[nav].diplomacy.length; missionIndex++){
+						this.entries[nav].diplomacy[missionIndex].completed = false;
+					}
+				}
 			}
+			voidCore = 0;
+			voidCoreRate = 0;
 
 			// Adding starting things
 			for(var upgrade in this.upgradeEntries){
@@ -260,6 +506,7 @@ Game.stargaze = (function(){
 			if(typeof data.stargaze.entries !== 'undefined'){
                 for(id in data.stargaze.entries){
                     this.entries[id] = data.stargaze.entries[id];
+                    this.normaliseEntry(id);
                     this.entries[id].unlocked = true;
                     this.entries[id].displayNeedsUpdate = true;
                 }
@@ -288,6 +535,9 @@ Game.stargaze = (function(){
                 }
             }
             this.unlocked = data.stargaze.unlocked;
+		}
+		for(var entryId in this.entries){
+			this.normaliseEntry(entryId);
 		}
 		for(var id in this.upgradeEntries){
 			var data = this.upgradeEntries[id];

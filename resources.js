@@ -42,7 +42,7 @@ function gainResources(delta) {
 		Game.resources.addResource(RESOURCE[id], getProduction(RESOURCE[id]) * delta);
 	}
 	var resourceEfficiencyTech = Game.tech.getTechData('efficiencyResearch');
-	var perSecondMultiplier = (1 + (resourceEfficiencyTech.current * 0.01)) * (1 + (Game.stargaze.entries.darkMatter.count * dmBoost));
+	var perSecondMultiplier = (1 + (resourceEfficiencyTech.current * 0.01)) * (1 + (Game.stargaze.entries.darkMatter.count * dmBoost)) * Game.stargaze.getPassiveProductionMultiplier();
 	antimatter += perSecondMultiplier*antimatterps * delta;
 }
 
@@ -57,31 +57,32 @@ function getMaxEnergy() {
 // Gain Buttons
 
 function gainResource(resource){
+	var manualGain = gainNum * Game.stargaze.getManualGainMultiplier();
 	if(resource === RESOURCE.Plasma){
-		if(getResource(RESOURCE.Energy) >= 1000 * gainNum && getResource(RESOURCE.Hydrogen) >= 10 * gainNum && getResource(RESOURCE.Plasma) < getMaxPlasma()){
-			Game.resources.addResource(RESOURCE.Plasma, gainNum);
-			Game.resources.takeResource(RESOURCE.Energy, 1000 * gainNum);
-			Game.resources.takeResource(RESOURCE.Hydrogen, 10 * gainNum);
-			Game.statistics.add('manualResources', gainNum);
+		if(getResource(RESOURCE.Energy) >= 1000 * manualGain && getResource(RESOURCE.Hydrogen) >= 10 * manualGain && getResource(RESOURCE.Plasma) < getMaxPlasma()){
+			Game.resources.addResource(RESOURCE.Plasma, manualGain);
+			Game.resources.takeResource(RESOURCE.Energy, 1000 * manualGain);
+			Game.resources.takeResource(RESOURCE.Hydrogen, 10 * manualGain);
+			Game.statistics.add('manualResources', manualGain);
 		}
 	} else if(resource === RESOURCE.Charcoal){
-		if(getResource(RESOURCE.Charcoal) < getStorage(RESOURCE.Charcoal) && getResource(RESOURCE.Wood) >= 2 * gainNum){
-			Game.resources.addResource(RESOURCE.Charcoal, gainNum);
-			Game.resources.takeResource(RESOURCE.Wood, 2 * gainNum);
-			Game.statistics.add('manualResources', gainNum);
+		if(getResource(RESOURCE.Charcoal) < getStorage(RESOURCE.Charcoal) && getResource(RESOURCE.Wood) >= 2 * manualGain){
+			Game.resources.addResource(RESOURCE.Charcoal, manualGain);
+			Game.resources.takeResource(RESOURCE.Wood, 2 * manualGain);
+			Game.statistics.add('manualResources', manualGain);
 		}
 	} else if(resource === RESOURCE.Meteorite){
 		if(getResource(RESOURCE.Meteorite) < getStorage(RESOURCE.Meteorite)){
-			if(getResource(RESOURCE.Plasma) >= 3 * gainNum){
-				Game.resources.addResource(RESOURCE.Meteorite, gainNum);
-				Game.resources.takeResource(RESOURCE.Plasma, 3 * gainNum);
-				Game.statistics.add('manualResources', gainNum);
+			if(getResource(RESOURCE.Plasma) >= 3 * manualGain){
+				Game.resources.addResource(RESOURCE.Meteorite, manualGain);
+				Game.resources.takeResource(RESOURCE.Plasma, 3 * manualGain);
+				Game.statistics.add('manualResources', manualGain);
 			}
 		}
 	} else {
 		if(getResource(resource) < getStorage(resource)){
-			Game.resources.addResource(resource, gainNum);
-			Game.statistics.add('manualResources', gainNum);
+			Game.resources.addResource(resource, manualGain);
+			Game.statistics.add('manualResources', manualGain);
 		}
 	}
 }

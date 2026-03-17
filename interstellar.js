@@ -89,6 +89,10 @@ Game.interstellar = (function(){
                         this.stars.entries[id].explored = data.interstellar.stars[id].explored;
                         this.stars.entries[id].owned = data.interstellar.stars[id].owned;
                         this.stars.entries[id].spy = data.interstellar.stars[id].spy;
+                        this.stars.entries[id].eventResolved = data.interstellar.stars[id].eventResolved || false;
+                        this.stars.entries[id].eventTitle = data.interstellar.stars[id].eventTitle || '';
+                        this.stars.entries[id].eventDesc = data.interstellar.stars[id].eventDesc || '';
+                        this.stars.entries[id].eventReward = data.interstellar.stars[id].eventReward || '';
                     }
                 }
             }
@@ -471,7 +475,7 @@ Game.interstellar.military = (function(){
 
     instance.getSpyChance = function(star, multi){
         var threat = this.getThreat(star.stats.power*(multi||1), star.stats.speed, true)+1;
-        return chance = this.entries.scout.active/threat*(20/(star.spy+1));
+        return chance = this.entries.scout.active/threat*(20/(star.spy+1)) * Game.stargaze.getSpyChanceMultiplier();
     }
 
     instance.spy = function(starName){

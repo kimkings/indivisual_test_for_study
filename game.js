@@ -46,6 +46,7 @@ var Game = (function() {
 
         refreshPerSec(delta);
         gainResources(delta);
+        this.stargaze.updateVoidCores(delta);
         fixStorageRounding();
     };
 

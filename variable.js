@@ -32,6 +32,7 @@ var nuclearStation = 0; var nuclearStationLunariteCost = 20000; var nuclearStati
 var magmatic = 0; var magmaticLunariteCost = 25000; var magmaticGemCost = 20000; var magmaticSilverCost = 15000; var magmaticLavaInput = 11; var magmaticOutput = 191;
 var fusionReactor = 0; var fusionReactorLunariteCost = 30000; var fusionReactorTitaniumCost = 20000; var fusionReactorSiliconCost = 15000; var fusionReactorHydrogenInput = 10; var fusionReactorHeliumInput = 10; var fusionReactorOutput = 273;
 var singularityReactor = 0; var singularityReactorLunariteCost = 35000; var singularityReactorTitaniumCost = 25000; var singularityReactorSiliconCost = 20000; var singularityReactorHydrogenInput = 14; var singularityReactorHeliumInput = 14; var singularityReactorOutput = 355;
+var voidCore = 0; var voidCoreRate = 0;
 
 // Uranium
 var uranium = 0; var uraniumStorage = 50; var uraniumNextStorage = 100; var uraniumps = 0;

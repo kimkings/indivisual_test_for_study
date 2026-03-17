@@ -4,9 +4,11 @@ function calculateEnergyOutput(delta) {
 	}
 
 	var multiplier = 1 + (Game.stargaze.entries.darkMatter.count * dmBoost);
+	var dysonMultiplier = Game.stargaze.getDysonMultiplier();
+	var singularityMultiplier = Game.stargaze.getSingularityMultiplier();
 
 	// Fixed outputs first
-	var output = (ring*ringOutput) + (swarm*swarmOutput) + (sphere*sphereOutput) + (solarPanel*solarPanelOutput);
+	var output = ((ring*ringOutput) + (swarm*swarmOutput) + (sphere*sphereOutput)) * dysonMultiplier + (solarPanel*solarPanelOutput);
 
 	if (getResourceAfterTick(RESOURCE.Charcoal, delta) >= charcoalEngine * charcoalEngineCharcoalInput * delta) {
 		output += charcoalEngine * charcoalEngineOutput;
@@ -31,7 +33,7 @@ function calculateEnergyOutput(delta) {
 
 	if (getResourceAfterTick(RESOURCE.Hydrogen, delta) >= singularityReactor * singularityReactorHydrogenInput * delta &&
 		getResourceAfterTick(RESOURCE.Helium, delta) >= singularityReactor * singularityReactorHeliumInput * delta) {
-		output += singularityReactor * singularityReactorOutput;
+		output += singularityReactor * singularityReactorOutput * singularityMultiplier;
 	}
 
 	return output * multiplier;
@@ -182,7 +184,7 @@ function refreshPerSec(delta){
 
 	// calculate multipliers (add prestige etc here)
 	var resourceEfficiencyTech = Game.tech.getTechData('efficiencyResearch');
-	var perSecondMultiplier = (1 + (resourceEfficiencyTech.current * 0.01)) * (1 + (Game.stargaze.entries.darkMatter.count * dmBoost));
+	var perSecondMultiplier = (1 + (resourceEfficiencyTech.current * 0.01)) * (1 + (Game.stargaze.entries.darkMatter.count * dmBoost)) * Game.stargaze.getPassiveProductionMultiplier();
 
 	// Now we calculate the base per second
 	uraniumps = grinder * grinderOutput * perSecondMultiplier;
@@ -208,7 +210,7 @@ function refreshPerSec(delta){
 
 	// Science
 	var scienceEfficiencyTech = Game.tech.getTechData('scienceEfficiencyResearch');
-	var scienceMultiplier = (1 + (scienceEfficiencyTech.current * 0.02)) * (1 + (Game.stargaze.entries.darkMatter.count * dmBoost));
+	var scienceMultiplier = (1 + (scienceEfficiencyTech.current * 0.02)) * (1 + (Game.stargaze.entries.darkMatter.count * dmBoost)) * Game.stargaze.getScienceMultiplier();
 	scienceps = ((lab*labOutput) + (labT2*labT2Output) + (labT3*labT3Output) + (labT4*labT4Output) + labT5*labT5Output) * scienceMultiplier;
 
 	if (!energyLow && globalEnergyLock === false) {

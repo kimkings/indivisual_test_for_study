@@ -25,6 +25,7 @@ function legacySave(data) {
 		magmatic: magmatic,
 		fusionReactor: fusionReactor,
 		singularityReactor: singularityReactor,
+		voidCore: voidCore,
 		oil: oil,
 		oilStorage: oilStorage,
 		oilNextStorage: oilNextStorage,
@@ -226,6 +227,7 @@ function legacyLoad(savegame){
 		if(typeof savegame.magmatic !== "undefined") magmatic = savegame.magmatic;
 		if(typeof savegame.fusionReactor !== "undefined") fusionReactor = savegame.fusionReactor;
 		if(typeof savegame.singularityReactor !== "undefined") singularityReactor = savegame.singularityReactor;
+		if(typeof savegame.voidCore !== "undefined") voidCore = savegame.voidCore;
 		if(typeof savegame.oil !== "undefined") oil = savegame.oil;
 		if(typeof savegame.oilStorage !== "undefined") oilStorage = savegame.oilStorage;
 		if(typeof savegame.oilNextStorage !== "undefined") oilNextStorage = savegame.oilNextStorage;

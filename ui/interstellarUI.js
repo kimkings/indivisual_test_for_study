@@ -247,6 +247,12 @@ Game.interstellarUI = (function(){
                 '<span class="star_{{resource1}}_prod">0</span> / Second',
                 '<h4>{{resource2}}:</h4>',
                 '<span class="star_{{resource2}}_prod">0</span> / Second',
+                '<br><br>',
+                '<h3 class="btn-link">Expedition Report:</h3>',
+                '<h4 id="{{htmlId}}_eventTitle">No anomalies charted yet</h4>',
+                '<span id="{{htmlId}}_eventDesc">Explore this system to resolve its local anomaly.</span>',
+                '<br>',
+                '<span id="{{htmlId}}_eventReward"></span>',
                 '</td></tr>'].join('\n'));
 
         instance.invadeShipsTemplate = Handlebars.compile(
@@ -391,7 +397,7 @@ Game.interstellarUI = (function(){
                 if(Game.interstellar.comms.entries.IRS.count + Game.interstellar.comms.entries.astroBreakthrough.count*5 >= data.distance){
                     document.getElementById('star_' + id).className = "";
                 }
-                $('#star_' + id + 'Cost').setText(Game.settings.format(data.distance*10000));
+                $('#star_' + id + 'Cost').setText(Game.settings.format(Math.floor(data.distance * 10000 * Game.stargaze.getTravelCostMultiplier())));
                 continue;
             }
             if(data.displayNeedsUpdate == false){
@@ -471,6 +477,11 @@ Game.interstellarUI = (function(){
                     } else {
                         document.getElementById('star_' + id + '_absorbButton').className = "btn btn-default disabled";
                     }
+                }
+                if(data.eventResolved){
+                    $('#star_' + id + '_eventTitle').text(data.eventTitle);
+                    $('#star_' + id + '_eventDesc').text(data.eventDesc);
+                    $('#star_' + id + '_eventReward').text('Rewards secured: ' + data.eventReward);
                 }
             }
             data.displayNeedsUpdate = false;
