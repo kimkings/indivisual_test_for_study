@@ -21,6 +21,9 @@ Game.tech = (function(){
     instance.initTech = function(id) {
         // using extend to create a new object and leave the defaults unchanged
         var data = jQuery.extend({}, Game.techData[id]);
+        if (data.cost && typeof data.cost === 'object') {
+            data.cost = jQuery.extend({}, data.cost);
+        }
         data.setId(id);
         return data;
     };
@@ -133,20 +136,19 @@ Game.tech = (function(){
         // create a new object for cost to avoid reference issues
         var cost = {};
         if (tech.costType === COST_TYPE.FIXED) {
+            var baseCost = (Game.techData[tech.id] && Game.techData[tech.id].cost) ? Game.techData[tech.id].cost : tech.cost;
             if (tech.current > 0 || count > 1) {
-                // this calculation could be done more elegantly with math
-                for (var resource in tech.cost) {
+                for (var resource in baseCost) {
                     cost[resource] = 0;
                 }
                 for (var i = 0; i < count; i++) {
-                    for (var resource in tech.cost) {
-                        cost[resource] += getCost(tech.cost[resource], tech.current + i);
+                    for (var resource in baseCost) {
+                        cost[resource] += getCost(baseCost[resource], tech.current + i);
                     }
                 }
             } else {
-                // the predefined base cost can be used
-                for (var resource in tech.cost) {
-                    cost[resource] = tech.cost[resource];
+                for (var resource in baseCost) {
+                    cost[resource] = baseCost[resource];
                 }
             }
         } else {

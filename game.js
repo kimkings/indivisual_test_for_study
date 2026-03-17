@@ -266,7 +266,8 @@ var Game = (function() {
         // Do this in a setInterval so it gets called even when the window is inactive
         window.setInterval(function(){ Game.fixedUpdate(); },100);
 
-        setTimeout(function(){document.getElementById("loadScreen").className = "hidden";}, 100)
+        self.deleteInterval("Loading Animation");
+        setTimeout(function(){document.getElementById("loadScreen").className = "hidden";}, 100);
         console.debug("Load Complete");
 
     };
@@ -277,13 +278,13 @@ var Game = (function() {
         }
 
         var logoElement = $('#loadLogo');
-        var opacity = logoElement.css('opacity');
-        if(opacity >= 0.9) {
-            logoElement.fadeTo(1000, .95, function() { Game.logoAnimating = false; });
-            self.logoAnimating = true;
+        var opacity = parseFloat(logoElement.css('opacity'), 10) || 1;
+        if (opacity >= 0.9) {
+            self.logoAnimating = false;
+            logoElement.fadeTo(1000, 0.3, function() { Game.logoAnimating = true; });
         } else if (opacity <= 0.3) {
-            logoElement.fadeTo(1000, .95, function() { Game.logoAnimating = false; });
-            self.logoAnimating = true;
+            self.logoAnimating = false;
+            logoElement.fadeTo(1000, 0.95, function() { Game.logoAnimating = true; });
         }
     };
 

@@ -272,6 +272,11 @@ function toggleAntimatter(){
 function destroyMachine(id){
 	if(window[id] > 0){
 		window[id] -= 1;
+		if (id === 'chemicalPlant' || id === 'oxidisation' || id === 'hydrazine') {
+			if (typeof updateFuelProductionCost === 'function') {
+				updateFuelProductionCost();
+			}
+		}
 		updateCost();
 	}
 }

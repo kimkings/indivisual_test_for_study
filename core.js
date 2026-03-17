@@ -1224,8 +1224,15 @@ function refreshTabs(){
     if(contains(buttonsHidden, "rebuildStargate")){
         document.getElementById("wonderTab").className = "completed";
     }
+	// Sol Center: 이미 구매한 연구는 새로고침/로드 후에도 구매 버튼이 다시 보이지 않도록 tech 상태와 동기화 (Plasma 중복 구매 버그 방지)
+	if (Game.tech) {
+		if (Game.tech.isPurchased('unlockPlasma') && !contains(buttonsHidden, 'researchPlasma')) { buttonsHidden.push('researchPlasma'); }
+		if (Game.tech.isPurchased('unlockEmc') && !contains(buttonsHidden, 'researchEmc')) { buttonsHidden.push('researchEmc'); }
+		if (Game.tech.isPurchased('unlockDyson') && !contains(buttonsHidden, 'researchDyson')) { buttonsHidden.push('researchDyson'); }
+	}
  	for(var i=0; i<buttonsHidden.length; i++){
- 		document.getElementById(buttonsHidden[i]).className += " hidden";
+ 		var el = document.getElementById(buttonsHidden[i]);
+ 		if (el) { el.className += " hidden"; }
  	}
 }
 

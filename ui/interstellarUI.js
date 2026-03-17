@@ -321,8 +321,8 @@ Game.interstellarUI = (function(){
     };
 
     instance.update = function(delta) {
-        
-        
+        var interstellarPane = document.getElementById('interstellarTab_pane');
+        var isInterstellarVisible = interstellarPane && interstellarPane.classList && interstellarPane.classList.contains('active');
 
         for(var id in this.commEntries) {
             var data = Game.interstellar.comms.getMachineData(id);
@@ -392,6 +392,9 @@ Game.interstellarUI = (function(){
             var data = Game.interstellar.stars.getStarData(id);
             if(data.owned){
                 systemsConquered += 1;
+            }
+            if (!isInterstellarVisible) {
+                continue;
             }
             if(data.explored == false){
                 if(Game.interstellar.comms.entries.IRS.count + Game.interstellar.comms.entries.astroBreakthrough.count*5 >= data.distance){
@@ -487,41 +490,44 @@ Game.interstellarUI = (function(){
             data.displayNeedsUpdate = false;
         }
 
-        // Updates Antimatter Nav
+        // Game state: systemsConquered / antimatterStorage (always, for cap logic)
         Game.interstellar.stars.systemsConquered = systemsConquered;
-        $('#sphereMax').text(systemsConquered+1)
         antimatterStorage = 100000*(systemsConquered+1);
-        $('#intnav_antimatter_current').text(Game.settings.format(antimatter));
-	var resourceEfficiencyTech = Game.tech.getTechData('efficiencyResearch');
-	var perSecondMultiplier = (1 + (resourceEfficiencyTech.current * 0.01)) * (1 + (Game.stargaze.entries.darkMatter.count * dmBoost));
-        $('#intnav_antimatter_perSecond').text((antimatterps*perSecondMultiplier).toFixed(2));
-        if(antimatter >= antimatterStorage){
-            document.getElementById("intnav_antimatter_current").className = "green";
-        } else {
-            document.getElementById("intnav_antimatter_current").className = "";
-        }
-        
 
-        if (this._starProducers == null) {
-            this._starProducers = {};
-            for(var i = 0; i < resources.length; i++){
-                var updateList = document.getElementsByClassName("star_" + Game.utils.capitaliseFirst(resources[i]) + "_prod");
-                var elems = [];
-                for(var j = 0; j < updateList.length; j++){
-                    elems.push(updateList[j]);
+        if (isInterstellarVisible) {
+            // Updates Antimatter Nav (DOM only when tab visible)
+            $('#sphereMax').text(systemsConquered+1);
+            $('#intnav_antimatter_current').text(Game.settings.format(antimatter));
+            var resourceEfficiencyTech = Game.tech.getTechData('efficiencyResearch');
+            var perSecondMultiplier = (1 + (resourceEfficiencyTech.current * 0.01)) * (1 + (Game.stargaze.entries.darkMatter.count * dmBoost)) * (Game.stargaze.getPassiveProductionMultiplier ? Game.stargaze.getPassiveProductionMultiplier() : 1);
+            $('#intnav_antimatter_perSecond').text((antimatterps*perSecondMultiplier).toFixed(2));
+            if(antimatter >= antimatterStorage){
+                document.getElementById("intnav_antimatter_current").className = "green";
+            } else {
+                document.getElementById("intnav_antimatter_current").className = "";
+            }
+
+            // Star producers / Fleet per-second display (lazy build + update only when visible)
+            if (this._starProducers == null) {
+                this._starProducers = {};
+                for(var i = 0; i < resources.length; i++){
+                    var updateList = document.getElementsByClassName("star_" + Game.utils.capitaliseFirst(resources[i]) + "_prod");
+                    var elems = [];
+                    for(var j = 0; j < updateList.length; j++){
+                        elems.push(updateList[j]);
+                    }
+                    this._starProducers[resources[i]] = elems;
                 }
-                this._starProducers[resources[i]] = elems;
+            }
+            for(var i = 0; i < resources.length; i++){
+                var perSec = window[resources[i] + "ps"];
+                var perSecText = Game.settings.format(perSec/4);
+                var elems = this._starProducers[resources[i]];
+                for(var j = 0; j < elems.length; j++){
+                    elems[j].textContent = perSecText;
+                }
             }
         }
-        for(var i = 0; i < resources.length; i++){
-            var perSec = window[resources[i] + "ps"];
-            var perSecText = Game.settings.format(perSec/4);
-            var elems = this._starProducers[resources[i]];
-            for(var j = 0; j < elems.length; j++){
-                elems[j].textContent = perSecText;
-            }            
-        }
-        
     };
 
     instance.createCommsMachine = function(data, machineData) {

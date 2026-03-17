@@ -108,7 +108,8 @@ Game.interstellar.stars = (function(){
             }
         }
         if(eventData.rewards.antimatter){
-            var antimatterReward = Math.floor(eventData.rewards.antimatter * rewardMultiplier);
+            var dmMultiplier = 1 + (Game.stargaze.entries.darkMatter.count * dmBoost);
+            var antimatterReward = Math.floor(eventData.rewards.antimatter * rewardMultiplier * dmMultiplier);
             antimatter = Math.min(antimatterStorage, antimatter + antimatterReward);
             rewardText.push(Game.settings.format(antimatterReward) + ' Antimatter');
         }
