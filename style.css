@@ -30,8 +30,146 @@
 	background-color: white !important;
 }
 
+.machine-manager-toolbar {
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	gap: 8px;
+	margin-bottom: 16px;
+}
+
+.machine-manager-toolbar label {
+	margin: 0;
+	font-weight: 600;
+}
+
+.machine-manager-toolbar select {
+	width: 110px;
+}
+
+.machine-manager-pane {
+	display: none;
+}
+
+.machine-manager-pane.active {
+	display: block;
+}
+
+.machine-resource-group {
+	margin-bottom: 22px;
+}
+
+.machine-resource-title {
+	font-size: 22px;
+	font-weight: 600;
+	margin: 0 0 10px;
+}
+
+.machine-manager-row {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 16px;
+	padding: 12px 0;
+	border-top: 1px solid #e5e5e5;
+}
+
+.machine-manager-main {
+	min-width: 0;
+	flex: 1 1 auto;
+}
+
+.machine-manager-name {
+	display: block;
+	font-size: 16px;
+	font-weight: 600;
+}
+
+.machine-manager-stats {
+	display: block;
+	margin-top: 4px;
+	color: #666;
+	font-size: 13px;
+}
+
+.machine-manager-actions {
+	display: flex;
+	flex: 0 0 auto;
+	gap: 8px;
+}
+
+.machine-manager-nav-row.info td {
+	background-color: #f5f5f5;
+	font-weight: 600;
+}
+
+/* 머신 탭: 리소스 탭과 동일한 테이블/사이드바 디자인 */
+#machineTab .container {
+	padding: 0;
+}
+
+#machineTab #machineManagerNav {
+	width: 100%;
+	margin-bottom: 0;
+}
+
+#machineTab #machineManagerNav .machine-manager-nav-row {
+	height: 60px;
+	min-height: 60px;
+	cursor: pointer;
+}
+
+#machineTab #machineManagerNav .machine-manager-nav-row td {
+	vertical-align: middle;
+	padding: 12px 16px;
+	border: none;
+	font-size: 14px;
+}
+
+#machineTab #machineManagerNav .machine-manager-nav-row:hover td {
+	background-color: #f5f5f5;
+}
+
+#machineTab .machine-manager-pane .container {
+	max-width: 900px;
+	margin-left: 0;
+	padding: 0 16px;
+}
+
+#machineTab .machine-manager-pane.active {
+	display: block;
+}
+
+#machineTab .machine-manager-row {
+	border-top: 1px solid #e5e8eb;
+}
+
+#machineTab .machine-manager-row:first-child {
+	border-top: none;
+}
+
+#machineTab .btn-default {
+	border-radius: 6px;
+	padding: 8px 16px;
+	font-size: 14px;
+}
+
+#machineTab .machine-manager-toolbar .form-control {
+	height: 34px;
+	padding: 6px 12px;
+	font-size: 14px;
+	border-radius: 6px;
+	border: 1px solid #e5e8eb;
+}
+
 /* Mobile optimization */
 @media (max-width: 992px) {
+	.nav-tabs > li.hidden,
+	#tabList > li.hidden,
+	.hidden {
+		display: none !important;
+	}
+
 	.container {
 		max-width: 100% !important;
 		width: auto !important;
@@ -70,9 +208,51 @@
 	#resourceNavParent, #technologyNavParent, .table {
 		min-width: 0 !important;
 	}
+
+	.machine-manager-row {
+		flex-direction: column;
+		align-items: stretch;
+		gap: 10px;
+	}
+
+	.machine-manager-actions {
+		width: 100%;
+	}
+
+	.machine-manager-actions .btn {
+		flex: 1 1 0;
+	}
+
+	.machine-manager-toolbar {
+		justify-content: space-between;
+		margin-bottom: 12px;
+	}
+
+	.machine-resource-title {
+		font-size: 18px;
+	}
+
+	#machineTab > .container {
+		width: 100% !important;
+		float: none !important;
+		max-width: none;
+	}
+
+	#machineTab .tab-content,
+	#machineTab #machineManagerContent {
+		width: 100% !important;
+		float: none !important;
+		margin-left: 0 !important;
+	}
 }
 
 @media (max-width: 640px) {
+	.nav-tabs > li.hidden,
+	#tabList > li.hidden,
+	.hidden {
+		display: none !important;
+	}
+
 	.navbar-brand, .navbar-nav > li > a {
 		font-size: 12px !important;
 	}
@@ -88,5 +268,22 @@
 	#tabList > li {
 		display: inline-block !important;
 		float: none !important;
+	}
+
+	.machine-manager-name {
+		font-size: 14px;
+	}
+
+	.machine-manager-stats {
+		font-size: 12px;
+	}
+
+	.machine-manager-toolbar select {
+		width: 96px;
+	}
+
+	#machineTab #machineManagerNav .machine-manager-nav-row td {
+		padding: 10px 12px;
+		font-size: 13px;
 	}
 }
