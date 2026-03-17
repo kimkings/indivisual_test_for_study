@@ -38,6 +38,55 @@ v0.5.1 in progress
 
 # Changelog:
 
+### v1.0 Custom Expansion Update
+##### Features
+
+- Added mobile optimization for the web version
+- Added Korean language selection support
+- Added language persistence and improved Korean checkbox text handling
+- Added Tier 7 progression through the Overlord relationship track
+- Added the Singularity Reactor as a new Tier 7 Energy machine
+- Added rebirth jumpstart upgrades for starting resources and logistics
+- Added 3 new late-game interstellar star systems
+- Added faction diplomacy missions with themed donation and machine requirements
+- Added faction standing tiers at 25, 50, and 80 reputation
+- Added faction standing rewards that improve manual gains, science, passive production, travel, Dyson output, and Tier 7 scaling
+- Added expedition events for explored star systems with faction-themed rewards
+- Added Void Cores as a new late-game Tier 7 meta resource tied to Singularity Reactors and exploration rewards
+- Added Void Core tracking to the Dark Matter page
+- Added new Dark Matter gain sources from faction standing, conquered systems, and Void Cores
+- Added new Dark Matter upgrades for diplomacy, travel, expedition rewards, and Void Core progression
+- Added Singularity Reactor achievements
+
+##### Balance and Progression
+
+- Connected Tier 7 machine unlocks to Overlord diplomacy instead of leaving them as isolated late-game content
+- Reduced interstellar travel costs through Moviton standing and Dark Matter upgrades
+- Improved espionage scaling through Moviton standing and Dark Matter upgrades
+- Increased science gains through Hyacinite standing rewards
+- Increased passive production through Kitrinos standing rewards
+- Increased Dyson output through Prasnian standing rewards
+- Increased manual resource gain through Carnelian standing rewards
+- Increased Singularity Reactor and Void Core scaling through Overlord standing rewards
+- Added rebirth carry-over support for new late-game progression bonuses
+
+##### Small Changes
+
+- Added standing labels directly to faction pages in Stargaze
+- Added reward previews for faction standing milestones
+- Added expedition reports directly to explored star system panels
+- Added Dark Matter page displays for current Void Core count and generation rate
+- Added one-time diplomacy mission completion handling per rebirth cycle
+- Added save/load support for Singularity Reactor and Void Core progression
+
+##### Bug Fixes
+
+- Fixed new late-game progression from being disconnected across rebirth, save/load, and interstellar exploration systems
+- Fixed exploration cost displays to match real modified travel costs
+- Fixed faction and late-game progression data to load safely with older saves
+- Fixed Tier 7 content so it contributes to achievements and Dark Matter reward calculations
+- Fixed expedition reward handling so resource, antimatter, and Void Core payouts are all applied consistently
+
 ### v0.5.1 (includes all V0.5.0.X)
 ##### Features
 
